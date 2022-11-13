@@ -54,6 +54,33 @@ li > button {
     width: 100%;
 }
 
-#content {
-    background-color: burlywood;
+.task {
+    margin: 0 1rem 0 1rem;
+    padding: 1.25rem;
+    border-bottom: 1px solid grey;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.task > * {
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
+.task-description {
+    flex: 1
+}
+
+.task-toggle {
+    width: 1.5rem;
+    height: 1.5rem;
+    background-color: white;
+    border: 1px solid grey;
+    border-radius: 50%;
+}
+
+#content .task:last-child {
+    border: none;
 }
