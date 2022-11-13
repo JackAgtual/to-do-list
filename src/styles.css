@@ -50,7 +50,7 @@ li {
     row-gap: 1rem;
 }
 
-#projects-hdr {
+.span-icon {
     display: flex;
     justify-content: space-between;
 }
