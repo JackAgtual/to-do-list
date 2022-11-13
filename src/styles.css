@@ -48,8 +48,6 @@ li {
     grid-template-rows: min-content;
     grid-auto-rows: min-content;
     row-gap: 1rem;
-    overflow: hidden;
-    overflow-y: scroll;
 }
 
 li > button {
