@@ -50,6 +50,11 @@ li {
     row-gap: 1rem;
 }
 
+#projects-hdr {
+    display: flex;
+    justify-content: space-between;
+}
+
 li > button {
     width: 100%;
 }
