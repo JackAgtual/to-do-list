@@ -1,8 +1,8 @@
 import './styles.css'
 import { format, parse } from 'date-fns'
-import taskDom from './taskDom'
+import TaskDom from './taskDom'
 
-const domController = taskDom();
+const domController = TaskDom();
 
 const tasks = [
     {
@@ -30,6 +30,6 @@ const tasks = [
     //     dueDate: '11/15/22'
     // },
 ];
-console.log('test')
+
 domController.clearTasks();
-domController.addTaskListToDom(tasks);
+domController.addTaskList(tasks);

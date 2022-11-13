@@ -1,13 +1,13 @@
 import pencil  from './icons/pencil.svg'
 import trash from './icons/trash.svg'
 
-export default function taskDom() {
+export default function TaskDom() {
     const clearTasks = () => {
         const content = document.querySelector('#content');
         content.innerHTML = '';
     }
 
-    const addTaskToDom = task => {
+    const addTask = task => {
         const content = document.querySelector('#content');
 
         const taskDiv = document.createElement('div');
@@ -26,15 +26,15 @@ export default function taskDom() {
         content.appendChild(taskDiv)
     }
 
-    const addTaskListToDom = taskList => {
+    const addTaskList = taskList => {
         taskList.forEach(task => {
-            addTaskToDom(task);
+            addTask(task);
         });
     }
 
     return {
         clearTasks,
-        addTaskToDom,
-        addTaskListToDom
+        addTask,
+        addTaskList
     };
 }
