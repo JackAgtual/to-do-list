@@ -92,9 +92,7 @@ export default function TaskDom() {
             });
 
             form.remove();
-
-            console.log(_tasks)
-        })
+        });
     }
 
     return {
