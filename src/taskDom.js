@@ -46,6 +46,7 @@ export default function TaskDom() {
         const content = _getContent();
         
         const form = document.createElement('form');
+        form.classList.add('form-new-task')
 
         form.innerHTML = `
             <div class="form-element">

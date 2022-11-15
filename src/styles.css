@@ -95,12 +95,16 @@ li > button {
     width: 1.5rem;
 }
 
-form {
+form.form-new-task {
     display: flex;
     justify-content: space-around;
     align-items: center;
     margin: 1rem 2rem;
     border-left: 6px solid black;
+}
+
+#project-name-input {
+    margin-top: 1rem;
 }
 
 .form-element {
