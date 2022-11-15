@@ -1,4 +1,9 @@
 export default function SidebarDom() {
+
+    const getProjects = () => {
+        const projectsList = document.querySelector('#project-list');
+        return [...projectsList.children].map(child => child.innerText);
+    }
     
     const inputNewProject = () => {
         const projectsList = document.querySelector('#project-list');
@@ -28,6 +33,7 @@ export default function SidebarDom() {
     }
 
     return {
+        getProjects,
         inputNewProject
     }
 }

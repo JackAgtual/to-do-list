@@ -1,5 +1,8 @@
 import pencil  from './icons/pencil.svg'
 import trash from './icons/trash.svg'
+import SidebarDom from './sidebarDom';
+
+const sidebarMgr = SidebarDom();
 
 export default function TaskDom() {
 
@@ -62,10 +65,7 @@ export default function TaskDom() {
             <div class="form-element">
                 <label for="project">Project:</label>
                 <select name="project" id="project">
-                    <option value="none"></option>
-                    <option value="Project1">Project1</option>
-                    <option value="Project2">Project2</option>
-                    <option value="Project3">Project3</option>
+                    ${_getProjectListHtml()}
                 </select>
             </div>
 
@@ -94,6 +94,17 @@ export default function TaskDom() {
 
             form.remove();
         });
+    }
+
+    const _getProjectListHtml = () => {
+        const projectList = sidebarMgr.getProjects();
+        
+        let projectsHtml = '<option value="none"></option>';
+        projectList.forEach(project => {
+            projectsHtml += `<option value="${project}">${project}</option>`;
+        });
+
+        return projectsHtml;
     }
 
     return {
