@@ -20,13 +20,13 @@ export default function TaskDom() {
         taskDiv.classList.add('task');
 
         taskDiv.innerHTML = `
-            <span class="task-toggle"></span>
+            <span class="task-toggle finished clickable"></span>
             <h3 class="task-title">${task.title}</h3>
             <p class="task-description">${task.description}</p>
             <p class="task-project">${task.project}</p>
             <p class="task-due-date">${task.dueDate}</p>
-            <img class="icon" src="${pencil}">
-            <img class="icon" src="${trash}">
+            <img class="icon clickable" src="${pencil}">
+            <img class="icon clickable" src="${trash}">
         `;
 
         content.appendChild(taskDiv)

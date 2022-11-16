@@ -42,17 +42,28 @@ li {
 
 
 #sidebar {
-    padding: 2rem 1rem 1rem 1rem;
+    padding: 0 0.5rem 0.5rem 0.5rem;
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: min-content;
     grid-auto-rows: min-content;
-    row-gap: 1rem;
+    row-gap: 0;
+}
+
+#add-project {
+    border-radius: 50%;
+}
+
+.clickable:hover {
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.05);
 }
 
 .span-icon {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
 }
 
 li > button {
@@ -84,6 +95,10 @@ li > button {
     background-color: white;
     border: 1px solid grey;
     border-radius: 50%;
+}
+
+.task-toggle.finished {
+    background-color: grey;
 }
 
 #content .task:last-child {
