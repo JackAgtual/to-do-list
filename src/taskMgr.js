@@ -3,9 +3,7 @@ export default function TaskMgr() {
 
     const getTaskList = () => _tasks;
 
-    const addTask = (title, description, project, dueDate) => {
-        _tasks.push({title, description, project, dueDate});
-    }
+    const addTask = task => _tasks.push(task);
 
     return {
         getTaskList,

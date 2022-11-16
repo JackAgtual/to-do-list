@@ -1,22 +1,18 @@
 import pencil  from './icons/pencil.svg'
 import trash from './icons/trash.svg'
 import SidebarDom from './sidebarDom';
+import TaskMgr from './taskMgr';
 
+const taskMgr = TaskMgr();
 const sidebarMgr = SidebarDom();
 
 export default function TaskDom() {
 
     const _getContent = () => document.getElementById('content');
     let _currentlyInputtingTask = false;
-    const _tasks = [];
     
-    const clearTasks = () => {
-        const content = _getContent();
-        content.innerHTML = '';
-    }
-
-    const addTask = task => {
-        _tasks.push(task);
+    const _addTaskToDom = task => {
+        taskMgr.addTask(task);
         
         const content = _getContent()
 
@@ -34,12 +30,6 @@ export default function TaskDom() {
         `;
 
         content.appendChild(taskDiv)
-    }
-
-    const addTaskList = taskList => {
-        taskList.forEach(task => {
-            addTask(task);
-        });
     }
 
     const inputNewTask = () => {
@@ -85,7 +75,7 @@ export default function TaskDom() {
 
             _currentlyInputtingTask = false;
 
-            addTask({
+            _addTaskToDom({
                 title: document.getElementById('title').value,
                 description: document.getElementById('description').value,
                 project: document.getElementById('project').value,
@@ -108,9 +98,6 @@ export default function TaskDom() {
     }
 
     return {
-        clearTasks,
-        addTask,
-        addTaskList,
         inputNewTask
     };
 }
