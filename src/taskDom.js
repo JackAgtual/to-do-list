@@ -32,7 +32,9 @@ export default function TaskDom() {
             <img class="icon clickable" src="${trash}">
         `;
         
+        // adding event listeners
         _toggleTaskFinished(taskDiv);
+        _removeTaskEvent(taskDiv);
 
         content.appendChild(taskDiv);
         taskMgr.addTask(task);
@@ -111,6 +113,28 @@ export default function TaskDom() {
             taskMgr.toggleTaskFinished(
                 Number(taskDomElement.getAttribute(_idxAttr))
             );
+        });
+    }
+
+    const _removeTaskEvent = taskDomElement => {
+        // assuming delete btn (img) is the last element
+        const deleteBtn = taskDomElement.lastElementChild;
+
+        deleteBtn.addEventListener('click', () => {
+
+            taskMgr.removeTask(
+                Number(taskDomElement.getAttribute(_idxAttr))
+            );
+
+            // adjust indecies of following tasks
+            let curSibling = taskDomElement.nextSibling;
+            while (curSibling) {
+                const curIdx = Number(curSibling.getAttribute(_idxAttr));
+                curSibling.setAttribute(_idxAttr, curIdx - 1);
+                curSibling = curSibling.nextSibling;
+            }
+
+            taskDomElement.remove();
         });
     }
 
