@@ -10,17 +10,20 @@ export default function TaskDom() {
 
     const _getContent = () => document.getElementById('content');
     let _currentlyInputtingTask = false;
+    const _idxAttr = 'data-idx';
     
     const _addTaskToDom = task => {
-        taskMgr.addTask(task);
         
         const content = _getContent()
 
         const taskDiv = document.createElement('div');
         taskDiv.classList.add('task');
+        taskDiv.setAttribute(_idxAttr, taskMgr.getTaskList().length)
+
+        const finished = task.finished ? 'finished' : '';
 
         taskDiv.innerHTML = `
-            <span class="task-toggle clickable"></span>
+            <span class="task-toggle clickable ${finished}"></span>
             <h3 class="task-title">${task.title}</h3>
             <p class="task-description">${task.description}</p>
             <p class="task-project">${task.project}</p>
@@ -32,6 +35,7 @@ export default function TaskDom() {
         _toggleTaskFinished(taskDiv);
 
         content.appendChild(taskDiv);
+        taskMgr.addTask(task);
     }
 
     const inputNewTask = () => {
@@ -82,6 +86,7 @@ export default function TaskDom() {
                 description: document.getElementById('description').value,
                 project: document.getElementById('project').value,
                 dueDate: document.getElementById('due-date').value,
+                finished: false,
             });
 
             form.remove();
@@ -102,7 +107,13 @@ export default function TaskDom() {
     const _toggleTaskFinished = taskDomElement => {
         // assuming toggle button (span) is the first element
         const toggleBtn = taskDomElement.firstElementChild;
-        toggleBtn.addEventListener('click', () => toggleBtn.classList.toggle('finished'));
+        toggleBtn.addEventListener('click', () => {
+            toggleBtn.classList.toggle('finished');
+
+            taskMgr.toggleTaskFinished(
+                Number(taskDomElement.getAttribute(_idxAttr))
+            );
+        });
     }
 
     return {
