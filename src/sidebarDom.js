@@ -1,5 +1,6 @@
 export default function SidebarDom() {
-
+    // TODO: Fix alignment of project lists
+    //       probably put them in the outter sidebar div
     const getProjects = () => {
         const projectsList = document.querySelector('#project-list');
         return [...projectsList.children].map(child => child.innerText);
@@ -28,6 +29,7 @@ export default function SidebarDom() {
 
     const _addProjectNameToList = (projectName, projectsList) => {
         const newProject = document.createElement('li');
+        newProject.classList.add('clickable')
         newProject.innerHTML = `<span>${projectName}</span>`;
         projectsList.appendChild(newProject);
     }
