@@ -96,12 +96,10 @@ export default function TaskDom() {
     const _getProjectListHtml = () => {
         const projectList = sidebarMgr.getProjects();
         
-        let projectsHtml = '<option value="none"></option>';
-        projectList.forEach(project => {
-            projectsHtml += `<option value="${project}">${project}</option>`;
-        });
-
-        return projectsHtml;
+        return projectList.reduce(
+            (prev, cur) => prev + `<option value="${cur}">${cur}</option>`,
+            '<option value=""></option>'
+        );
     }
 
     const _toggleTaskFinished = taskDomElement => {
