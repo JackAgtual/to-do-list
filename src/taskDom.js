@@ -20,7 +20,7 @@ export default function TaskDom() {
         taskDiv.classList.add('task');
 
         taskDiv.innerHTML = `
-            <span class="task-toggle finished clickable"></span>
+            <span class="task-toggle clickable"></span>
             <h3 class="task-title">${task.title}</h3>
             <p class="task-description">${task.description}</p>
             <p class="task-project">${task.project}</p>
@@ -28,8 +28,10 @@ export default function TaskDom() {
             <img class="icon clickable" src="${pencil}">
             <img class="icon clickable" src="${trash}">
         `;
+        
+        _toggleTaskFinished(taskDiv);
 
-        content.appendChild(taskDiv)
+        content.appendChild(taskDiv);
     }
 
     const inputNewTask = () => {
@@ -95,6 +97,12 @@ export default function TaskDom() {
         });
 
         return projectsHtml;
+    }
+
+    const _toggleTaskFinished = taskDomElement => {
+        // assuming toggle button (span) is the first element
+        const toggleBtn = taskDomElement.firstElementChild;
+        toggleBtn.addEventListener('click', () => toggleBtn.classList.toggle('finished'));
     }
 
     return {
