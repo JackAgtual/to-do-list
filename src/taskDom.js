@@ -11,14 +11,18 @@ export default function TaskDom() {
     const _getContent = () => document.getElementById('content');
     let _currentlyInputtingTask = false;
     const _idxAttr = 'data-idx';
+
+    const _getTaskIdx = taskDomElement => Number(taskDomElement.getAttribute(_idxAttr));
     
-    const _addTaskToDom = task => {
+    const _addTaskToDom = (task, idx) => {
         
         const content = _getContent()
 
         const taskDiv = document.createElement('div');
         taskDiv.classList.add('task');
-        taskDiv.setAttribute(_idxAttr, taskMgr.getTaskList().length)
+
+        const taskIdx = idx === undefined ? taskMgr.getTaskList().length : idx;
+        taskDiv.setAttribute(_idxAttr, taskIdx)
 
         const finished = task.finished ? 'finished' : '';
 
@@ -35,46 +39,63 @@ export default function TaskDom() {
         // adding event listeners
         _toggleTaskFinished(taskDiv);
         _removeTaskEvent(taskDiv);
+        _editTaskEvent(taskDiv);
 
-        content.appendChild(taskDiv);
-        taskMgr.addTask(task);
+        const referenceNode = document.querySelector(`[data-idx="${idx}"]`)
+        content.insertBefore(taskDiv, referenceNode);
+
+        if (idx === undefined) taskMgr.addTask(task);
+        else taskMgr.editTaskAtIdx(idx, task);
     }
 
-    const inputNewTask = () => {
-        if (_currentlyInputtingTask) return;
-        _currentlyInputtingTask = true;
-
-        const content = _getContent();
-        
+    const _generateTaskForm = task => {
         const form = document.createElement('form');
         form.classList.add('form-new-task')
+        
+        if (task === undefined) {
+            task = {
+                title: '',
+                description: '',
+                project: '',
+                dueDate: '',
+            }
+        }
 
         form.innerHTML = `
             <div class="form-element">
                 <label for="title">Title:</label>
-                <input type="text" id="title">
+                <input type="text" id="title" value="${task.title}">
             </div>
             
             <div class="form-element">
                 <label for="description">Description</label>
-                <input type="text" id="description">
+                <input type="text" id="description" value="${task.description}">
             </div>
 
             <div class="form-element">
                 <label for="project">Project:</label>
-                <select name="project" id="project">
+                <select name="project" id="project" value="${task.project}">
                     ${_getProjectListHtml()}
                 </select>
             </div>
 
             <div class="form-element">
                 <label for="due-date">Due date:</label>
-                <input type="date" id="due-date">
+                <input type="date" id="due-date" value="${task.dueDate}">
             </div>
 
             <button id="add-task-submit">Add</button>
         `;
 
+        return form;
+    }
+    
+    const inputNewTask = () => {
+        if (_currentlyInputtingTask) return;
+        _currentlyInputtingTask = true;
+
+        const content = _getContent();
+        const form = _generateTaskForm();        
         content.appendChild(form);
 
         const submitBtn = document.getElementById('add-task-submit');
@@ -110,9 +131,7 @@ export default function TaskDom() {
         toggleBtn.addEventListener('click', () => {
             toggleBtn.classList.toggle('finished');
 
-            taskMgr.toggleTaskFinished(
-                Number(taskDomElement.getAttribute(_idxAttr))
-            );
+            taskMgr.toggleTaskFinished(_getTaskIdx(taskDomElement));
         });
     }
 
@@ -122,14 +141,12 @@ export default function TaskDom() {
 
         deleteBtn.addEventListener('click', () => {
 
-            taskMgr.removeTask(
-                Number(taskDomElement.getAttribute(_idxAttr))
-            );
+            taskMgr.removeTask(_getTaskIdx(taskDomElement));
 
             // adjust indecies of following tasks
             let curSibling = taskDomElement.nextSibling;
             while (curSibling) {
-                const curIdx = Number(curSibling.getAttribute(_idxAttr));
+                const curIdx = _getTaskIdx(curSibling);
                 curSibling.setAttribute(_idxAttr, curIdx - 1);
                 curSibling = curSibling.nextSibling;
             }
@@ -138,7 +155,52 @@ export default function TaskDom() {
         });
     }
 
+    const _editTaskEvent = taskDomElement => {
+        const editBtnIdx = 5;
+        const editBtn = taskDomElement.children.item(editBtnIdx);
+
+        editBtn.addEventListener('click', () => {
+            // steps:
+            // clear task dom
+            // get task contents form taskMgr
+            // populate form with current contsnts so user can edit
+            // update dom and task array
+
+            // get task info
+            const taskIdx = _getTaskIdx(taskDomElement);
+            const task = taskMgr.getTaskAtIdx(taskIdx);
+
+            taskDomElement.innerHTML = '';
+            taskDomElement.classList.remove('task')
+
+            const form = _generateTaskForm(task)
+
+            taskDomElement.appendChild(form)
+
+            _currentlyInputtingTask = true;
+
+            // copy and pasted
+            const submitBtn = document.getElementById('add-task-submit');
+            submitBtn.addEventListener('click', e => {
+                e.preventDefault();
+
+                _currentlyInputtingTask = false;
+
+                _addTaskToDom({
+                    title: document.getElementById('title').value,
+                    description: document.getElementById('description').value,
+                    project: document.getElementById('project').value,
+                    dueDate: document.getElementById('due-date').value,
+                    finished: false,
+                }, taskIdx);
+
+                taskDomElement.remove();
+            });
+        });
+    }
+
     return {
-        inputNewTask
+        inputNewTask,
+        _addTaskToDom 
     };
 }
