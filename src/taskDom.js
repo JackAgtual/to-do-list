@@ -44,6 +44,7 @@ export default function TaskDom() {
         const referenceNode = document.querySelector(`[data-idx="${idx}"]`)
         content.insertBefore(taskDiv, referenceNode);
 
+        // Update taskMgr
         if (idx === undefined) taskMgr.addTask(task);
         else taskMgr.editTaskAtIdx(idx, task);
     }
@@ -89,6 +90,41 @@ export default function TaskDom() {
 
         return form;
     }
+
+    const _submitBtnEventListener = (parentElement, taskIdx) => {
+        const submitBtn = document.getElementById('add-task-submit');
+        submitBtn.addEventListener('click', e => {
+            e.preventDefault();
+
+            _currentlyInputtingTask = false;
+
+            const task = {
+                title: document.getElementById('title').value,
+                description: document.getElementById('description').value,
+                project: document.getElementById('project').value,
+                dueDate: document.getElementById('due-date').value,
+                finished: false,
+            };
+
+            
+            if (taskIdx === undefined) {
+                // Adding a new task
+                _addTaskToDom(task);
+                
+            } else {
+                // editing an existing task
+                
+                const taskIdx = _getTaskIdx(parentElement)
+                
+                // need to get finished state from taskMgr 
+                task.finished = taskMgr.getTaskAtIdx(taskIdx).finished;
+
+                _addTaskToDom(task, taskIdx);
+            }
+
+            parentElement.remove();
+        });
+    }
     
     const inputNewTask = () => {
         if (_currentlyInputtingTask) return;
@@ -98,22 +134,7 @@ export default function TaskDom() {
         const form = _generateTaskForm();        
         content.appendChild(form);
 
-        const submitBtn = document.getElementById('add-task-submit');
-        submitBtn.addEventListener('click', e => {
-            e.preventDefault();
-
-            _currentlyInputtingTask = false;
-
-            _addTaskToDom({
-                title: document.getElementById('title').value,
-                description: document.getElementById('description').value,
-                project: document.getElementById('project').value,
-                dueDate: document.getElementById('due-date').value,
-                finished: false,
-            });
-
-            form.remove();
-        });
+        _submitBtnEventListener(form);
     }
 
     const _getProjectListHtml = () => {
@@ -160,42 +181,21 @@ export default function TaskDom() {
         const editBtn = taskDomElement.children.item(editBtnIdx);
 
         editBtn.addEventListener('click', () => {
-            // steps:
-            // clear task dom
-            // get task contents form taskMgr
-            // populate form with current contsnts so user can edit
-            // update dom and task array
-
             // get task info
             const taskIdx = _getTaskIdx(taskDomElement);
             const task = taskMgr.getTaskAtIdx(taskIdx);
 
+            // remove contents
             taskDomElement.innerHTML = '';
             taskDomElement.classList.remove('task')
 
+            // add form to user can edit
             const form = _generateTaskForm(task)
-
             taskDomElement.appendChild(form)
 
             _currentlyInputtingTask = true;
 
-            // copy and pasted
-            const submitBtn = document.getElementById('add-task-submit');
-            submitBtn.addEventListener('click', e => {
-                e.preventDefault();
-
-                _currentlyInputtingTask = false;
-
-                _addTaskToDom({
-                    title: document.getElementById('title').value,
-                    description: document.getElementById('description').value,
-                    project: document.getElementById('project').value,
-                    dueDate: document.getElementById('due-date').value,
-                    finished: false,
-                }, taskIdx);
-
-                taskDomElement.remove();
-            });
+            _submitBtnEventListener(taskDomElement, taskIdx);
         });
     }
 
