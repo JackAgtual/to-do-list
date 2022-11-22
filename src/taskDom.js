@@ -1,5 +1,7 @@
 import pencil  from './icons/pencil.svg'
 import trash from './icons/trash.svg'
+import floppy from './icons/floppy.svg'
+import close from './icons/close-circle.svg'
 import SidebarDom from './sidebarDom';
 import TaskMgr from './taskMgr';
 
@@ -53,13 +55,18 @@ export default function TaskDom() {
         const form = document.createElement('form');
         form.classList.add('form-new-task')
         
+        let btn = `
+            <img class="icon clickable" id="add-task-submit" src="${floppy}">
+        `;
         if (task === undefined) {
+            // Adding a new task
             task = {
                 title: '',
                 description: '',
                 project: '',
                 dueDate: '',
             }
+            btn = '<button id="add-task-submit">Add</button>';
         }
 
         form.innerHTML = `
@@ -84,8 +91,10 @@ export default function TaskDom() {
                 <label for="due-date">Due date:</label>
                 <input type="date" id="due-date" value="${task.dueDate}">
             </div>
-
-            <button id="add-task-submit">Add</button>
+            <div class="form-btns">
+                ${btn}
+                <img class="icon clickable" id="discard" src="${close}">
+            </div>
         `;
 
         return form;
@@ -126,6 +135,31 @@ export default function TaskDom() {
         });
     }
     
+    const _discardTaskEventListener = (parentElement, oldHTML) => {
+        const discardBtn = document.getElementById('discard');
+        discardBtn.addEventListener('click', e => {
+            e.preventDefault();
+
+            if (oldHTML === undefined) {
+                // discard new task
+                parentElement.remove();
+            }
+            else {
+                // discard existing task edits
+                
+                parentElement.innerHTML = oldHTML;
+                parentElement.classList.add('task')
+
+                // adding event listeners
+                _toggleTaskFinished(parentElement);
+                _removeTaskEvent(parentElement);
+                _editTaskEvent(parentElement);
+            }
+
+            _currentlyInputtingTask = false;
+        })
+    }
+
     const inputNewTask = () => {
         if (_currentlyInputtingTask) return;
         _currentlyInputtingTask = true;
@@ -135,6 +169,7 @@ export default function TaskDom() {
         content.appendChild(form);
 
         _submitBtnEventListener(form);
+        _discardTaskEventListener(form)
     }
 
     const _getProjectListHtml = () => {
@@ -181,11 +216,14 @@ export default function TaskDom() {
         const editBtn = taskDomElement.children.item(editBtnIdx);
 
         editBtn.addEventListener('click', () => {
+            if (_currentlyInputtingTask) return;
+            
             // get task info
             const taskIdx = _getTaskIdx(taskDomElement);
             const task = taskMgr.getTaskAtIdx(taskIdx);
 
             // remove contents
+            const oldHTML = taskDomElement.innerHTML;
             taskDomElement.innerHTML = '';
             taskDomElement.classList.remove('task')
 
@@ -196,6 +234,7 @@ export default function TaskDom() {
             _currentlyInputtingTask = true;
 
             _submitBtnEventListener(taskDomElement, taskIdx);
+            _discardTaskEventListener(taskDomElement, oldHTML);
         });
     }
 

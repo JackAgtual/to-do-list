@@ -121,6 +121,16 @@ form.form-new-task {
     border-left: 6px solid black;
 }
 
+.form-btns {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.form-btns > *:not(:last-child) {
+    margin-right: 1rem;
+}
+
 #project-name-input {
     padding-left: 4px;
 }
