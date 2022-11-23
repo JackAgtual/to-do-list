@@ -167,6 +167,7 @@ export default function TaskDom() {
         const content = _getContent();
         const form = _generateTaskForm();        
         content.appendChild(form);
+        document.getElementById('title').select();
 
         _submitBtnEventListener(form);
         _discardTaskEventListener(form)
@@ -217,7 +218,7 @@ export default function TaskDom() {
 
         editBtn.addEventListener('click', () => {
             if (_currentlyInputtingTask) return;
-            
+
             // get task info
             const taskIdx = _getTaskIdx(taskDomElement);
             const task = taskMgr.getTaskAtIdx(taskIdx);
@@ -230,6 +231,7 @@ export default function TaskDom() {
             // add form to user can edit
             const form = _generateTaskForm(task)
             taskDomElement.appendChild(form)
+            document.getElementById('title').select();
 
             _currentlyInputtingTask = true;
 

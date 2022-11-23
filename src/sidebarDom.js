@@ -15,6 +15,7 @@ export default function SidebarDom() {
 
         // add form
         projectsList.appendChild(newProjectForm);
+        document.getElementById('project-name-input').select();
 
         // add project when form is submitted
         newProjectForm.addEventListener('submit', e => {
