@@ -241,7 +241,6 @@ export default function TaskDom() {
     }
 
     return {
-        inputNewTask,
-        _addTaskToDom 
+        inputNewTask
     };
 }
