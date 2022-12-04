@@ -1,3 +1,10 @@
+import TaskMgr from './taskMgr'
+import TaskDom from './taskDom'
+import { differenceInCalendarDays, parse } from 'date-fns'
+
+const taskMgr = TaskMgr();
+const domController = TaskDom();
+
 export default function SidebarDom() {
     // TODO: Fix alignment of project lists
     //       probably put them in the outter sidebar div
@@ -28,6 +35,12 @@ export default function SidebarDom() {
         });
     }
 
+    const addEventListenerToDateFilters = () => {
+        document.getElementById('inbox').addEventListener('click', () => domController.renderTasks(taskMgr.getAllTasks()));
+        document.getElementById('today').addEventListener('click', () => domController.renderTasks(taskMgr.getTasksToday()));
+        document.getElementById('this-week').addEventListener('click', () => domController.renderTasks(taskMgr.getTasksThisWeek()));
+    }
+
     const _addProjectNameToList = (projectName, projectsList) => {
         const newProject = document.createElement('li');
         newProject.classList.add('clickable')
@@ -37,6 +50,7 @@ export default function SidebarDom() {
 
     return {
         getProjects,
-        inputNewProject
+        inputNewProject,
+        addEventListenerToDateFilters
     }
 }

@@ -4,6 +4,7 @@ import floppy from './icons/floppy.svg'
 import close from './icons/close-circle.svg'
 import SidebarDom from './sidebarDom';
 import TaskMgr from './taskMgr';
+import { parse, format } from 'date-fns'
 
 const taskMgr = TaskMgr();
 const sidebarMgr = SidebarDom();
@@ -14,6 +15,15 @@ export default function TaskDom() {
     let _currentlyInputtingTask = false;
     const _idxAttr = 'data-idx';
 
+    const renderTasks = taskList => {
+        if (taskList === undefined) return;
+
+        const content = _getContent();
+        content.innerHTML = '';
+
+        taskList.forEach(task => _addTaskToDom(task));
+    }
+
     const _getTaskIdx = taskDomElement => Number(taskDomElement.getAttribute(_idxAttr));
     
     const _addTaskToDom = (task, idx) => {
@@ -23,7 +33,7 @@ export default function TaskDom() {
         const taskDiv = document.createElement('div');
         taskDiv.classList.add('task');
 
-        const taskIdx = idx === undefined ? taskMgr.getTaskList().length : idx;
+        const taskIdx = idx === undefined ? taskMgr.getAllTasks().length : idx;
         taskDiv.setAttribute(_idxAttr, taskIdx)
 
         const finished = task.finished ? 'finished' : '';
@@ -100,6 +110,11 @@ export default function TaskDom() {
         return form;
     }
 
+    const _changeDefaultDateStrFormat = dateStr => {
+        const date = parse(dateStr, 'yyyy-MM-dd', new Date());
+        return format(date, 'MM/dd/yyyy');
+    }
+
     const _submitBtnEventListener = (parentElement, taskIdx) => {
         const submitBtn = document.getElementById('add-task-submit');
         submitBtn.addEventListener('click', e => {
@@ -111,7 +126,7 @@ export default function TaskDom() {
                 title: document.getElementById('title').value,
                 description: document.getElementById('description').value,
                 project: document.getElementById('project').value,
-                dueDate: document.getElementById('due-date').value,
+                dueDate: _changeDefaultDateStrFormat(document.getElementById('due-date').value),
                 finished: false,
             };
 
@@ -241,6 +256,7 @@ export default function TaskDom() {
     }
 
     return {
-        inputNewTask
+        inputNewTask,
+        renderTasks
     };
 }
