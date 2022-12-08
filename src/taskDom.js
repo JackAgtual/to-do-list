@@ -28,7 +28,6 @@ export default function TaskDom(taskMgr, sidebarMgr) {
         const taskDiv = document.createElement('div');
         taskDiv.classList.add('task');
 
-        // const taskIdx = idx === undefined ? taskMgr.getAllTasks().length : idx;
         let taskIdx;
         if (idx === undefined) {
             if (task.idx === undefined) taskIdx = taskMgr.getAllTasks().length;
@@ -97,7 +96,7 @@ export default function TaskDom(taskMgr, sidebarMgr) {
 
             <div class="form-element">
                 <label for="due-date">Due date:</label>
-                <input type="date" id="due-date" value="${task.dueDate}">
+                <input type="date" id="due-date" value="${_userDateFormatToHtmlDateFormat(task.dueDate)}">
             </div>
             <div class="form-btns">
                 ${btn}
@@ -108,9 +107,18 @@ export default function TaskDom(taskMgr, sidebarMgr) {
         return form;
     }
 
-    const _changeDefaultDateStrFormat = dateStr => {
+    const _htmlDateFormatToUserDateFormat = dateStr => {
+        if (dateStr === '') return '';
+
         const date = parse(dateStr, 'yyyy-MM-dd', new Date());
         return format(date, 'MM/dd/yyyy');
+    }
+
+    const _userDateFormatToHtmlDateFormat = dateStr => {
+        if (dateStr === '') return '';
+
+        const date = parse(dateStr, 'MM/dd/yyyy', new Date());
+        return format(date, 'yyyy-MM-dd');
     }
 
     const _submitBtnEventListener = (parentElement, taskIdx) => {
@@ -124,7 +132,7 @@ export default function TaskDom(taskMgr, sidebarMgr) {
                 title: document.getElementById('title').value,
                 description: document.getElementById('description').value,
                 project: document.getElementById('project').value,
-                dueDate: _changeDefaultDateStrFormat(document.getElementById('due-date').value),
+                dueDate: _htmlDateFormatToUserDateFormat(document.getElementById('due-date').value),
                 finished: false,
             };
 
