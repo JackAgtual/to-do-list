@@ -28,7 +28,14 @@ export default function TaskDom(taskMgr, sidebarMgr) {
         const taskDiv = document.createElement('div');
         taskDiv.classList.add('task');
 
-        const taskIdx = idx === undefined ? taskMgr.getAllTasks().length : idx;
+        // const taskIdx = idx === undefined ? taskMgr.getAllTasks().length : idx;
+        let taskIdx;
+        if (idx === undefined) {
+            if (task.idx === undefined) taskIdx = taskMgr.getAllTasks().length;
+            else taskIdx = task.idx;
+        }
+        else taskIdx = idx;
+
         taskDiv.setAttribute(_idxAttr, taskIdx)
 
         const finished = task.finished ? 'finished' : '';
@@ -136,7 +143,7 @@ export default function TaskDom(taskMgr, sidebarMgr) {
                 task.finished = taskMgr.getTaskAtIdx(taskIdx).finished;
 
                 _addTaskToDom(task, taskIdx);
-                taskMgr.editTaskAtIdx(idx, task);
+                taskMgr.editTaskAtIdx(taskIdx, task);
             }
 
             parentElement.remove();
@@ -181,6 +188,7 @@ export default function TaskDom(taskMgr, sidebarMgr) {
         _discardTaskEventListener(form)
     }
 
+    // TODO: This should be a part of the projectMgr
     const _getProjectListHtml = () => {
         const projectList = sidebarMgr.getProjects();
 

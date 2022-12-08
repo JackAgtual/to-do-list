@@ -6,6 +6,7 @@ import SidebarDom from './sidebarDom'
 const taskMgr = TaskMgr();
 // TODO: make sidebarDom and taskDom global
 // TODO: make projectMgr separate class outisde sidbar (one class for managing projects, one for dom manipulation)
+window.taskMgr = taskMgr; // for debugging
 
 const sidebarController = SidebarDom(taskMgr);
 const taskController = TaskDom(taskMgr, sidebarController);
