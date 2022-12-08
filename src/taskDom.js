@@ -1,15 +1,10 @@
-import pencil  from './icons/pencil.svg'
+import pencil from './icons/pencil.svg'
 import trash from './icons/trash.svg'
 import floppy from './icons/floppy.svg'
 import close from './icons/close-circle.svg'
-import SidebarDom from './sidebarDom';
-import TaskMgr from './taskMgr';
 import { parse, format } from 'date-fns'
 
-const taskMgr = TaskMgr();
-const sidebarMgr = SidebarDom();
-
-export default function TaskDom() {
+export default function TaskDom(taskMgr, sidebarMgr) {
 
     const _getContent = () => document.getElementById('content');
     let _currentlyInputtingTask = false;
@@ -20,14 +15,14 @@ export default function TaskDom() {
 
         const content = _getContent();
         content.innerHTML = '';
-
+        // debugger
         taskList.forEach(task => _addTaskToDom(task));
     }
 
     const _getTaskIdx = taskDomElement => Number(taskDomElement.getAttribute(_idxAttr));
-    
+
     const _addTaskToDom = (task, idx) => {
-        
+
         const content = _getContent()
 
         const taskDiv = document.createElement('div');
@@ -47,7 +42,7 @@ export default function TaskDom() {
             <img class="icon clickable" src="${pencil}">
             <img class="icon clickable" src="${trash}">
         `;
-        
+
         // adding event listeners
         _toggleTaskFinished(taskDiv);
         _removeTaskEvent(taskDiv);
@@ -55,16 +50,12 @@ export default function TaskDom() {
 
         const referenceNode = document.querySelector(`[data-idx="${idx}"]`)
         content.insertBefore(taskDiv, referenceNode);
-
-        // Update taskMgr
-        if (idx === undefined) taskMgr.addTask(task);
-        else taskMgr.editTaskAtIdx(idx, task);
     }
 
     const _generateTaskForm = task => {
         const form = document.createElement('form');
         form.classList.add('form-new-task')
-        
+
         let btn = `
             <img class="icon clickable" id="add-task-submit" src="${floppy}">
         `;
@@ -130,26 +121,28 @@ export default function TaskDom() {
                 finished: false,
             };
 
-            
+
             if (taskIdx === undefined) {
                 // Adding a new task
                 _addTaskToDom(task);
-                
+                taskMgr.addTask(task);
+
             } else {
                 // editing an existing task
-                
+
                 const taskIdx = _getTaskIdx(parentElement)
-                
+
                 // need to get finished state from taskMgr 
                 task.finished = taskMgr.getTaskAtIdx(taskIdx).finished;
 
                 _addTaskToDom(task, taskIdx);
+                taskMgr.editTaskAtIdx(idx, task);
             }
 
             parentElement.remove();
         });
     }
-    
+
     const _discardTaskEventListener = (parentElement, oldHTML) => {
         const discardBtn = document.getElementById('discard');
         discardBtn.addEventListener('click', e => {
@@ -161,7 +154,7 @@ export default function TaskDom() {
             }
             else {
                 // discard existing task edits
-                
+
                 parentElement.innerHTML = oldHTML;
                 parentElement.classList.add('task')
 
@@ -180,7 +173,7 @@ export default function TaskDom() {
         _currentlyInputtingTask = true;
 
         const content = _getContent();
-        const form = _generateTaskForm();        
+        const form = _generateTaskForm();
         content.appendChild(form);
         document.getElementById('title').select();
 
@@ -190,7 +183,7 @@ export default function TaskDom() {
 
     const _getProjectListHtml = () => {
         const projectList = sidebarMgr.getProjects();
-        
+
         return projectList.reduce(
             (prev, cur) => prev + `<option value="${cur}">${cur}</option>`,
             '<option value=""></option>'

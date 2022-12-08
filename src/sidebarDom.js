@@ -1,18 +1,9 @@
-import TaskMgr from './taskMgr'
-import TaskDom from './taskDom'
-import { differenceInCalendarDays, parse } from 'date-fns'
-
-const taskMgr = TaskMgr();
-const domController = TaskDom();
-
-export default function SidebarDom() {
-    // TODO: Fix alignment of project lists
-    //       probably put them in the outter sidebar div
+export default function SidebarDom(taskMgr) {
     const getProjects = () => {
         const projectsList = document.querySelector('#project-list');
         return [...projectsList.children].map(child => child.innerText);
     }
-    
+
     const inputNewProject = () => {
         const projectsList = document.querySelector('#project-list');
 
@@ -35,7 +26,7 @@ export default function SidebarDom() {
         });
     }
 
-    const addEventListenerToDateFilters = () => {
+    const addEventListenerToDateFilters = domController => {
         document.getElementById('inbox').addEventListener('click', () => domController.renderTasks(taskMgr.getAllTasks()));
         document.getElementById('today').addEventListener('click', () => domController.renderTasks(taskMgr.getTasksToday()));
         document.getElementById('this-week').addEventListener('click', () => domController.renderTasks(taskMgr.getTasksThisWeek()));
