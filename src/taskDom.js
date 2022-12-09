@@ -4,7 +4,7 @@ import floppy from './icons/floppy.svg'
 import close from './icons/close-circle.svg'
 import { parse, format } from 'date-fns'
 
-export default function TaskDom(taskMgr, sidebarMgr) {
+export default function TaskDom(taskMgr, projectController) {
 
     const _getContent = () => document.getElementById('content');
     let _currentlyInputtingTask = false;
@@ -90,7 +90,7 @@ export default function TaskDom(taskMgr, sidebarMgr) {
             <div class="form-element">
                 <label for="project">Project:</label>
                 <select name="project" id="project" value="${task.project}">
-                    ${_getProjectListHtml()}
+                    ${projectController.getProjectListHtml()}
                 </select>
             </div>
 
@@ -194,16 +194,6 @@ export default function TaskDom(taskMgr, sidebarMgr) {
 
         _submitBtnEventListener(form);
         _discardTaskEventListener(form)
-    }
-
-    // TODO: This should be a part of the projectMgr
-    const _getProjectListHtml = () => {
-        const projectList = sidebarMgr.getProjects();
-
-        return projectList.reduce(
-            (prev, cur) => prev + `<option value="${cur}">${cur}</option>`,
-            '<option value=""></option>'
-        );
     }
 
     const _toggleTaskFinished = taskDomElement => {
