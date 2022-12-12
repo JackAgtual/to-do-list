@@ -23,7 +23,7 @@ button {
 }
 
 li {
-    list-style-type: none;   
+    list-style-type: none;
 }
 
 #header {
@@ -39,7 +39,7 @@ li {
     align-items: center;
 }
 
-#corner > *:first-child {
+#corner>*:first-child {
     margin-right: 1rem;
 }
 
@@ -69,21 +69,21 @@ li {
     padding: var(--sidebar-padding);
 }
 
-li > button {
+li>button {
     width: 100%;
 }
 
-#content > * {
+#content>* {
     border-bottom: 1px solid grey;
     margin-right: 1rem;
     margin-left: 1rem;
 }
 
-#content > *:last-child {
+#content>*:last-child {
     border: none;
 }
 
-#content > form:last-child {
+#content>form:last-child {
     margin-top: 1rem;
 }
 
@@ -95,7 +95,7 @@ li > button {
     gap: 1rem;
 }
 
-.task > * {
+.task>* {
     flex-grow: 0;
     flex-shrink: 0;
 }
@@ -136,7 +136,7 @@ form.form-new-task {
     align-items: center;
 }
 
-.form-btns > *:not(:last-child) {
+.form-btns>*:not(:last-child) {
     margin-right: 1rem;
 }
 
@@ -144,9 +144,17 @@ form.form-new-task {
     padding-left: 4px;
 }
 
-#project-list > * {
+#project-list>* {
     padding: var(--sidebar-padding) 0 var(--sidebar-padding) var(--sidebar-padding);
 }
+
+.project-name {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
 .form-element {
     display: flex;
     flex-direction: column;

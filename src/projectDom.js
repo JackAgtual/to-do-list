@@ -33,7 +33,7 @@ export default function ProjectDom(SidebarController) {
     const _addProjectNameToPage = (projectName, projectsListHtml) => {
         const newProject = document.createElement('li');
         newProject.classList.add('clickable')
-        newProject.innerHTML = `<span>${projectName}</span>`;
+        newProject.innerHTML = `<span class="project-name">${projectName}</span>`;
         projectsListHtml.appendChild(newProject);
         return newProject;
     }
