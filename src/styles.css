@@ -57,7 +57,7 @@ li {
     border-radius: 50%;
 }
 
-.clickable:hover {
+.clickable:hover:not(.selected-filter) {
     cursor: pointer;
     background-color: rgba(0, 0, 0, 0.05);
 }
@@ -158,4 +158,8 @@ form.form-new-task {
 .form-element {
     display: flex;
     flex-direction: column;
+}
+
+.selected-filter {
+    background-color: #e2e8f0;
 }

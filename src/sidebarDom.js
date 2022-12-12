@@ -1,15 +1,41 @@
 export default function SidebarTaskFilterDom() {
 
+    const _currentlySelectedClass = 'selected-filter';
+
+    const _inbox = document.getElementById('inbox');
+    const _today = document.getElementById('today');
+    const _thisWeek = document.getElementById('this-week');
+
+    // initialize inbox as selected filter
+    _inbox.classList.add(_currentlySelectedClass)
+    let _previouslySelectedFilter = _inbox;
+
     const addEventListenerToDateFilters = domController => {
-        document.getElementById('inbox').addEventListener('click', () => domController.renderTasks(window.TaskMgr.getAllTasks()));
-        document.getElementById('today').addEventListener('click', () => domController.renderTasks(window.TaskMgr.getTasksToday()));
-        document.getElementById('this-week').addEventListener('click', () => domController.renderTasks(window.TaskMgr.getTasksThisWeek()));
+        _inbox.addEventListener('click', () => {
+            domController.renderTasks(window.TaskMgr.getAllTasks());
+            _updateSelectedFilter(_inbox);
+        });
+        _today.addEventListener('click', () => {
+            domController.renderTasks(window.TaskMgr.getTasksToday());
+            _updateSelectedFilter(_today);
+        });
+        _thisWeek.addEventListener('click', () => {
+            domController.renderTasks(window.TaskMgr.getTasksThisWeek());
+            _updateSelectedFilter(_thisWeek);
+        });
     }
 
     const addEventListenerToProjectFilter = (projectHtmlElement, projectName, domController) => {
         projectHtmlElement.addEventListener('click', () => {
             domController.renderTasks(window.TaskMgr.getTasksFromProject(projectName))
+            _updateSelectedFilter(projectHtmlElement)
         })
+    }
+
+    const _updateSelectedFilter = newFilterElement => {
+        newFilterElement.classList.add(_currentlySelectedClass);
+        _previouslySelectedFilter.classList.remove(_currentlySelectedClass)
+        _previouslySelectedFilter = newFilterElement;
     }
 
     return {
