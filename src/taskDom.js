@@ -4,7 +4,7 @@ import floppy from './icons/floppy.svg'
 import close from './icons/close-circle.svg'
 import { parse, format } from 'date-fns'
 
-export default function TaskDom(taskMgr, projectController) {
+export default function TaskDom(projectController) {
 
     const _getContent = () => document.getElementById('content');
     let _currentlyInputtingTask = false;
@@ -15,7 +15,6 @@ export default function TaskDom(taskMgr, projectController) {
 
         const content = _getContent();
         content.innerHTML = '';
-        // debugger
         taskList.forEach(task => _addTaskToDom(task));
     }
 
@@ -30,8 +29,8 @@ export default function TaskDom(taskMgr, projectController) {
 
         let taskIdx;
         if (idx === undefined) {
-            if (task.idx === undefined) taskIdx = taskMgr.getAllTasks().length;
-            else taskIdx = task.idx;
+            if (task.idx === undefined) taskIdx = window.TaskMgr.getAllTasks().length; // appending task to end
+            else taskIdx = task.idx; // edditing task at idx
         }
         else taskIdx = idx;
 
@@ -140,7 +139,7 @@ export default function TaskDom(taskMgr, projectController) {
             if (taskIdx === undefined) {
                 // Adding a new task
                 _addTaskToDom(task);
-                taskMgr.addTask(task);
+                window.TaskMgr.addTask(task);
 
             } else {
                 // editing an existing task
@@ -148,10 +147,12 @@ export default function TaskDom(taskMgr, projectController) {
                 const taskIdx = _getTaskIdx(parentElement)
 
                 // need to get finished state from taskMgr 
-                task.finished = taskMgr.getTaskAtIdx(taskIdx).finished;
+                task.finished = window.TaskMgr.getTaskAtIdx(taskIdx).finished;
 
                 _addTaskToDom(task, taskIdx);
-                taskMgr.editTaskAtIdx(taskIdx, task);
+                window.TaskMgr.editTaskAtIdx(taskIdx, task);
+
+                // Here is where you need to update event listener
             }
 
             parentElement.remove();
@@ -202,7 +203,7 @@ export default function TaskDom(taskMgr, projectController) {
         toggleBtn.addEventListener('click', () => {
             toggleBtn.classList.toggle('finished');
 
-            taskMgr.toggleTaskFinished(_getTaskIdx(taskDomElement));
+            window.TaskMgr.toggleTaskFinished(_getTaskIdx(taskDomElement));
         });
     }
 
@@ -212,7 +213,7 @@ export default function TaskDom(taskMgr, projectController) {
 
         deleteBtn.addEventListener('click', () => {
 
-            taskMgr.removeTask(_getTaskIdx(taskDomElement));
+            window.TaskMgr.removeTask(_getTaskIdx(taskDomElement));
 
             // adjust indecies of following tasks
             let curSibling = taskDomElement.nextSibling;
@@ -235,7 +236,7 @@ export default function TaskDom(taskMgr, projectController) {
 
             // get task info
             const taskIdx = _getTaskIdx(taskDomElement);
-            const task = taskMgr.getTaskAtIdx(taskIdx);
+            const task = window.TaskMgr.getTaskAtIdx(taskIdx);
 
             // remove contents
             const oldHTML = taskDomElement.innerHTML;
@@ -256,6 +257,6 @@ export default function TaskDom(taskMgr, projectController) {
 
     return {
         inputNewTask,
-        renderTasks
+        renderTasks,
     };
 }

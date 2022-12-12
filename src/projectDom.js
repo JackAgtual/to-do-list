@@ -1,4 +1,8 @@
-export default function ProjectDom(ProjectMgr) {
+import TaskDom from './taskDom';
+
+const TaskController = TaskDom(); // need to instatiate here to avoid circular dependency
+
+export default function ProjectDom(SidebarController) {
     const inputNewProject = () => {
         const projectsListHtml = document.querySelector('#project-list');
 
@@ -16,10 +20,13 @@ export default function ProjectDom(ProjectMgr) {
             e.preventDefault();
 
             const projectName = document.getElementById(inputElementId).value
-            _addProjectNameToPage(projectName, projectsListHtml);
+            const newProject = _addProjectNameToPage(projectName, projectsListHtml);
             newProjectForm.remove();
 
-            ProjectMgr.addProject(projectName)
+            // Add event listener project filter 
+            SidebarController.addEventListenerToProjectFilter(newProject, projectName, TaskController)
+
+            window.ProjectMgr.addProject(projectName)
         });
     }
 
@@ -28,10 +35,11 @@ export default function ProjectDom(ProjectMgr) {
         newProject.classList.add('clickable')
         newProject.innerHTML = `<span>${projectName}</span>`;
         projectsListHtml.appendChild(newProject);
+        return newProject;
     }
 
     const getProjectListHtml = () => {
-        const projectList = ProjectMgr.getAllProjects();
+        const projectList = window.ProjectMgr.getAllProjects();
 
         return projectList.reduce(
             (prev, cur) => prev + `<option value="${cur}">${cur}</option>`,

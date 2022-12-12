@@ -1,7 +1,4 @@
 import { isToday, parse, nextSunday, isSunday, isBefore, isSameDay } from 'date-fns'
-// TODO: figure out what to do if person adds a task when they are in filtered view
-// TODO: When filtering by projecet, adding task should default to filtered project
-// TODO: Allow user to input task without due date
 
 export default function TaskMgr() {
     const _tasks = [];
@@ -45,6 +42,8 @@ export default function TaskMgr() {
         return false;
     })
 
+    const getTasksFromProject = projectName => _tasks.filter(task => task.project === projectName);
+
     return {
         getAllTasks,
         getTasksToday,
@@ -53,6 +52,7 @@ export default function TaskMgr() {
         editTaskAtIdx,
         toggleTaskFinished,
         removeTask,
-        addTask
+        addTask,
+        getTasksFromProject
     }
 }
