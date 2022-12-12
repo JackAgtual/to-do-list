@@ -248,6 +248,9 @@ export default function TaskDom(projectController) {
             taskDomElement.appendChild(form)
             document.getElementById('title').select();
 
+            // select correct project from drop-down menu
+            document.getElementById('project').selectedIndex = window.ProjectMgr.getAllProjects().indexOf(task.project) + 1;
+
             _currentlyInputtingTask = true;
 
             _submitBtnEventListener(taskDomElement, taskIdx);
