@@ -295,6 +295,22 @@ export default function TaskAndProjectController(SidebarController) {
         });
     }
 
+    const renderProjectList = projectList => {
+        const projectListElement = document.getElementById('project-list');
+
+        projectList.forEach(projectName => {
+            _addProjectNameToPage(projectName, projectListElement)
+            SidebarController.addEventListenerToProjectFilter(projectListElement, projectName, renderTasks)
+        })
+    }
+
+    const getProjectHtmlElementFromProjectName = projectName => {
+        const projectListHtml = document.getElementById('project-list');
+        for (const child of projectListHtml.children) {
+            if (child.firstChild.innerText === projectName) return child;
+        }
+    }
+
     // ***** Project Controller Helper Functions *****
     const _addNewProjectEventListener = () => {
         const addProject = document.querySelector('#add-project');
@@ -325,5 +341,7 @@ export default function TaskAndProjectController(SidebarController) {
         inputNewTask,
         renderTasks,
         inputNewProject,
+        renderProjectList,
+        getProjectHtmlElementFromProjectName
     };
 }
