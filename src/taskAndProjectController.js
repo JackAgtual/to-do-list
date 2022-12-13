@@ -4,12 +4,16 @@ import floppy from './icons/floppy.svg'
 import close from './icons/close-circle.svg'
 import { parse, format } from 'date-fns'
 
-export default function TaskDom(projectController) {
-
-    const _getContent = () => document.getElementById('content');
+export default function TaskAndProjectController(SidebarController) {
     let _currentlyInputtingTask = false;
     const _idxAttr = 'data-idx';
 
+    const _init = () => {
+        _addTaskEventListener();
+        _addNewProjectEventListener();
+    }
+
+    // ***** Task Controller Functions *****
     const renderTasks = taskList => {
         if (taskList === undefined) return;
 
@@ -17,6 +21,24 @@ export default function TaskDom(projectController) {
         content.innerHTML = '';
         taskList.forEach(task => _addTaskToDom(task));
     }
+
+    const inputNewTask = () => {
+        if (_currentlyInputtingTask) return;
+        _currentlyInputtingTask = true;
+
+        const content = _getContent();
+        const form = _generateTaskForm();
+        content.appendChild(form);
+        document.getElementById('title').select();
+
+        _submitBtnEventListener(form);
+        _discardTaskEventListener(form)
+    }
+
+    // ***** Task Controller Helper Functions *****
+    const _getContent = () => document.getElementById('content');
+
+    const _addTaskEventListener = () => document.querySelector('#add-task').addEventListener('click', inputNewTask);
 
     const _getTaskIdx = taskDomElement => Number(taskDomElement.getAttribute(_idxAttr));
 
@@ -89,7 +111,7 @@ export default function TaskDom(projectController) {
             <div class="form-element">
                 <label for="project">Project:</label>
                 <select name="project" id="project" value="${task.project}">
-                    ${projectController.getProjectListHtml()}
+                    ${_getProjectListHtml()}
                 </select>
             </div>
 
@@ -184,19 +206,6 @@ export default function TaskDom(projectController) {
         })
     }
 
-    const inputNewTask = () => {
-        if (_currentlyInputtingTask) return;
-        _currentlyInputtingTask = true;
-
-        const content = _getContent();
-        const form = _generateTaskForm();
-        content.appendChild(form);
-        document.getElementById('title').select();
-
-        _submitBtnEventListener(form);
-        _discardTaskEventListener(form)
-    }
-
     const _toggleTaskFinished = taskDomElement => {
         // assuming toggle button (span) is the first element
         const toggleBtn = taskDomElement.firstElementChild;
@@ -258,8 +267,63 @@ export default function TaskDom(projectController) {
         });
     }
 
+    // ***** Project Controller Functions *****
+    const inputNewProject = () => {
+        const projectsListHtml = document.querySelector('#project-list');
+
+        const newProjectForm = document.createElement('form');
+        const inputElementId = 'project-name-input';
+        newProjectForm.classList.add('form-new-project')
+        newProjectForm.innerHTML = `<input id="${inputElementId}" type="text">`;
+
+        // add form
+        projectsListHtml.appendChild(newProjectForm);
+        document.getElementById(inputElementId).select();
+
+        // add project when form is submitted
+        newProjectForm.addEventListener('submit', e => {
+            e.preventDefault();
+
+            const projectName = document.getElementById(inputElementId).value
+            const newProject = _addProjectNameToPage(projectName, projectsListHtml);
+            newProjectForm.remove();
+
+            // Add event listener project filter 
+            SidebarController.addEventListenerToProjectFilter(newProject, projectName, renderTasks)
+
+            window.ProjectMgr.addProject(projectName)
+        });
+    }
+
+    // ***** Project Controller Helper Functions *****
+    const _addNewProjectEventListener = () => {
+        const addProject = document.querySelector('#add-project');
+        addProject.addEventListener('click', inputNewProject);
+    }
+
+    const _getProjectListHtml = () => {
+        const projectList = window.ProjectMgr.getAllProjects();
+
+        return projectList.reduce(
+            (prev, cur) => prev + `<option value="${cur}">${cur}</option>`,
+            '<option value=""></option>'
+        );
+    }
+
+    const _addProjectNameToPage = (projectName, projectsListHtml) => {
+        const newProject = document.createElement('li');
+        newProject.classList.add('clickable')
+        newProject.innerHTML = `<span class="project-name">${projectName}</span>`;
+        projectsListHtml.appendChild(newProject);
+        return newProject;
+    }
+
+    // ***** Initialize Controller *****
+    _init();
+
     return {
         inputNewTask,
         renderTasks,
+        inputNewProject,
     };
 }

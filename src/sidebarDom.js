@@ -25,9 +25,9 @@ export default function SidebarTaskFilterDom() {
         });
     }
 
-    const addEventListenerToProjectFilter = (projectHtmlElement, projectName, domController) => {
+    const addEventListenerToProjectFilter = (projectHtmlElement, projectName, renderTasksFunction) => {
         projectHtmlElement.addEventListener('click', () => {
-            domController.renderTasks(window.TaskMgr.getTasksFromProject(projectName))
+            renderTasksFunction(window.TaskMgr.getTasksFromProject(projectName))
             _updateSelectedFilter(projectHtmlElement)
         })
     }
