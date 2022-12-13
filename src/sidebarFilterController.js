@@ -3,68 +3,72 @@ export default function SidebarTaskFilterController(Storage) {
     const _currentlySelectedClass = 'selected-filter';
     let _previouslySelectedFilter;
 
-    const _inbox = document.getElementById('inbox');
-    const _today = document.getElementById('today');
-    const _thisWeek = document.getElementById('this-week');
+    const dateFilterElements = {
+        'inbox': document.getElementById('inbox'),
+        'today': document.getElementById('today'),
+        'this-week': document.getElementById('this-week')
+    };
 
     const _init = () => {
         // initialize inbox as selected filter
-        _inbox.classList.add(_currentlySelectedClass);
-        _previouslySelectedFilter = _inbox;
+        dateFilterElements.inbox.classList.add(_currentlySelectedClass);
+        _previouslySelectedFilter = dateFilterElements.inbox;
     }
 
     const addEventListenerToDateFilters = domController => {
-        _inbox.addEventListener('click', () => {
-            domController.renderTasks(window.TaskMgr.getAllTasks());
-            _updateSelectedFilter(_inbox, 'inbox');
-        });
-        _today.addEventListener('click', () => {
-            domController.renderTasks(window.TaskMgr.getTasksToday());
-            _updateSelectedFilter(_today, 'today');
-        });
-        _thisWeek.addEventListener('click', () => {
-            domController.renderTasks(window.TaskMgr.getTasksThisWeek());
-            _updateSelectedFilter(_thisWeek, 'this-week');
-        });
+        dateFilterElements.inbox.addEventListener('click', () => _renderInbox(domController));
+        dateFilterElements.today.addEventListener('click', () => _renderToday(domController));
+        dateFilterElements['this-week'].addEventListener('click', () => _renderThisWeek(domController));
     }
 
     const addEventListenerToProjectFilter = (projectHtmlElement, projectName, renderTasksFunction) => {
         projectHtmlElement.addEventListener('click', () => {
-            renderTasksFunction(window.TaskMgr.getTasksFromProject(projectName))
-            _updateSelectedFilter(projectHtmlElement, projectName)
+            renderTasksFunction(window.TaskMgr.getTasksFromProject(projectName));
+            _updateSelectedFilter(projectHtmlElement, projectName);
         })
-    }
-
-    const _updateSelectedFilter = (newFilterElement, filterName) => {
-        newFilterElement.classList.add(_currentlySelectedClass);
-        _previouslySelectedFilter.classList.remove(_currentlySelectedClass)
-        _previouslySelectedFilter = newFilterElement;
-        Storage.updateSidebarFilter(filterName);
     }
 
     const applyFilter = (filterName, domController) => {
         switch (filterName.toLowerCase()) {
             case 'inbox':
-                domController.renderTasks(window.TaskMgr.getAllTasks());
-                _updateSelectedFilter(_inbox, 'inbox');
+                _renderInbox(domController);
                 break
             case 'today':
-                domController.renderTasks(window.TaskMgr.getTasksToday());
-                _updateSelectedFilter(_today, 'today');
+                _renderToday(domController);
                 break
             case 'this-week':
-                domController.renderTasks(window.TaskMgr.getTasksThisWeek());
-                _updateSelectedFilter(_thisWeek, 'this-week');
+                _renderThisWeek(domController);
                 break
             default:
                 // project filter selected
-                domController.renderTasks(window.TaskMgr.getTasksFromProject(filterName));
+                domController.renderTasks(window.TaskMgr.getTasksFromProject(projectName));
                 _updateSelectedFilter(
-                    domController.getProjectHtmlElementFromProjectName(filterName),
-                    filterName
-                )
-
+                    domController.getProjectHtmlElementFromProjectName(projectName),
+                    projectName
+                );
         }
+    }
+
+    const _updateSelectedFilter = (newFilterElement, filterName) => {
+        newFilterElement.classList.add(_currentlySelectedClass);
+        _previouslySelectedFilter.classList.remove(_currentlySelectedClass);
+        _previouslySelectedFilter = newFilterElement;
+        Storage.updateSidebarFilter(filterName);
+    }
+
+    const _renderInbox = domController => {
+        domController.renderTasks(window.TaskMgr.getAllTasks());
+        _updateSelectedFilter(dateFilterElements.inbox, 'inbox');
+    }
+
+    const _renderToday = domController => {
+        domController.renderTasks(window.TaskMgr.getTasksToday());
+        _updateSelectedFilter(dateFilterElements.today, 'today');
+    }
+
+    const _renderThisWeek = domController => {
+        domController.renderTasks(window.TaskMgr.getTasksThisWeek());
+        _updateSelectedFilter(dateFilterElements['this-week'], 'this-week');
     }
 
     _init();
