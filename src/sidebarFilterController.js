@@ -1,4 +1,4 @@
-export default function SidebarTaskFilterDom() {
+export default function SidebarTaskFilterController() {
 
     const _currentlySelectedClass = 'selected-filter';
 

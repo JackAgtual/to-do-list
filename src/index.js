@@ -1,7 +1,7 @@
 import './styles.css'
 import TaskMgr from './taskMgr'
 import ProjectMgr from './projectMgr'
-import SidebarTaskFilterDom from './sidebarDom'
+import SidebarTaskFilterController from './sidebarFilterController'
 import TaskAndProjectController from './taskAndProjectController'
 
 // TODO: figure out what to do if person adds a task when they are in filtered view
@@ -10,7 +10,7 @@ import TaskAndProjectController from './taskAndProjectController'
 window.TaskMgr = TaskMgr();
 window.ProjectMgr = ProjectMgr();
 
-const sidebarFilterController = SidebarTaskFilterDom();
+const sidebarFilterController = SidebarTaskFilterController();
 const taskAndProjectcontroller = TaskAndProjectController(sidebarFilterController);
 
 // sidebar filters
