@@ -284,7 +284,12 @@ export default function TaskAndProjectController(SidebarController) {
         newProjectForm.addEventListener('submit', e => {
             e.preventDefault();
 
-            const projectName = document.getElementById(inputElementId).value
+            const projectName = document.getElementById(inputElementId).value.trim();
+
+            if (window.ProjectMgr.projectNameAlreadyExists(projectName)) {
+                newProjectForm.remove();
+                return
+            }
             const newProject = _addProjectNameToPage(projectName, projectsListHtml);
             newProjectForm.remove();
 

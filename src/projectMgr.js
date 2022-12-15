@@ -10,9 +10,12 @@ export default function ProjectMgr(storage) {
         storage.updateProjectArray(_projects);
     }
 
+    const projectNameAlreadyExists = projectName => _projects.map(project => project.toLowerCase()).includes(projectName.toLowerCase())
+
     return {
         overwriteAllProjects,
         getAllProjects,
-        addProject
+        addProject,
+        projectNameAlreadyExists
     }
 }
