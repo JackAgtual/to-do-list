@@ -4,15 +4,17 @@ import ProjectMgr from './projectMgr'
 import SidebarTaskFilterController from './sidebarFilterController'
 import TaskAndProjectController from './taskAndProjectController'
 import Storage from './storage'
+import TasksCompleteCounter from './tasksCompleteCounter'
+
 
 // TODO: figure out what to do if person adds a task when they are in filtered view
 // TODO: When filtering by projecet, adding task should default to filtered project
 // TODO: prevent user from inputting duplicate projects
 
 const storage = Storage();
-window.myStorage = storage;
+const tasksCompleteCounter = TasksCompleteCounter();
 
-window.TaskMgr = TaskMgr(storage);
+window.TaskMgr = TaskMgr(storage, tasksCompleteCounter);
 window.ProjectMgr = ProjectMgr(storage);
 
 const sidebarFilterController = SidebarTaskFilterController(storage);

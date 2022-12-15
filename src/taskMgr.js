@@ -1,6 +1,6 @@
 import { isToday, parse, nextSunday, isSunday, isBefore, isSameDay } from 'date-fns'
 
-export default function TaskMgr(storage) {
+export default function TaskMgr(storage, tasksCompleteCounter) {
     let _tasks = [];
 
     /* task fields: {
@@ -12,7 +12,10 @@ export default function TaskMgr(storage) {
         idx: int,
     }*/
 
-    const overwriteAllTasks = newTaskArray => _tasks = newTaskArray;
+    const overwriteAllTasks = newTaskArray => {
+        _tasks = newTaskArray;
+        tasksCompleteCounter.updateTasksCompleteCounter(_tasks);
+    }
 
     const getAllTasks = () => _tasks;
 
@@ -21,11 +24,13 @@ export default function TaskMgr(storage) {
     const editTaskAtIdx = (idx, updatedTask) => {
         _tasks[idx] = updatedTask;
         storage.updateTaskArray(_tasks)
+        tasksCompleteCounter.updateTasksCompleteCounter(_tasks);
     }
 
     const toggleTaskFinished = taskIdx => {
         _tasks[taskIdx].finished = !_tasks[taskIdx].finished;
         storage.updateTaskArray(_tasks)
+        tasksCompleteCounter.updateTasksCompleteCounter(_tasks);
     }
 
     const removeTask = taskIdx => {
@@ -34,12 +39,14 @@ export default function TaskMgr(storage) {
         for (let i = taskIdx; i < _tasks.length; i++) _tasks[i].idx -= 1;
 
         storage.updateTaskArray(_tasks)
+        tasksCompleteCounter.updateTasksCompleteCounter(_tasks);
     }
 
     const addTask = task => {
         task.idx = _tasks.length;
         _tasks.push(task);
         storage.updateTaskArray(_tasks)
+        tasksCompleteCounter.updateTasksCompleteCounter(_tasks);
     }
 
     const getTasksToday = () => _tasks.filter(task => isToday(parse(task.dueDate, 'MM/dd/yyyy', new Date())))

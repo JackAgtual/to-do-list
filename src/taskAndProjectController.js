@@ -211,7 +211,7 @@ export default function TaskAndProjectController(SidebarController) {
         const toggleBtn = taskDomElement.firstElementChild;
         toggleBtn.addEventListener('click', () => {
             toggleBtn.classList.toggle('finished');
-
+            debugger
             window.TaskMgr.toggleTaskFinished(_getTaskIdx(taskDomElement));
         });
     }
