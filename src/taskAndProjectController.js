@@ -299,8 +299,8 @@ export default function TaskAndProjectController(SidebarController) {
         const projectListElement = document.getElementById('project-list');
 
         projectList.forEach(projectName => {
-            _addProjectNameToPage(projectName, projectListElement)
-            SidebarController.addEventListenerToProjectFilter(projectListElement, projectName, renderTasks)
+            const projectBtn = _addProjectNameToPage(projectName, projectListElement)
+            SidebarController.addEventListenerToProjectFilter(projectBtn, projectName, renderTasks)
         })
     }
 

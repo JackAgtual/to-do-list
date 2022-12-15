@@ -41,10 +41,10 @@ export default function SidebarTaskFilterController(Storage) {
                 break
             default:
                 // project filter selected
-                domController.renderTasks(window.TaskMgr.getTasksFromProject(projectName));
+                domController.renderTasks(window.TaskMgr.getTasksFromProject(filterName));
                 _updateSelectedFilter(
-                    domController.getProjectHtmlElementFromProjectName(projectName),
-                    projectName
+                    domController.getProjectHtmlElementFromProjectName(filterName),
+                    filterName
                 );
         }
     }
