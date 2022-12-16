@@ -6,9 +6,10 @@ import TaskAndProjectController from './taskAndProjectController'
 import Storage from './storage'
 import TasksCompleteCounter from './tasksCompleteCounter'
 
-
 // TODO: figure out what to do if person adds a task when they are in filtered view
 // TODO: When filtering by projecet, adding task should default to filtered project
+// TODO: Allow user to remove project. Make project blank for any tasks that have removed project
+// TODO: Make site more responsive
 
 const storage = Storage();
 const tasksCompleteCounter = TasksCompleteCounter();
@@ -22,4 +23,5 @@ const taskAndProjectcontroller = TaskAndProjectController(sidebarFilterControlle
 // sidebar filters
 sidebarFilterController.addEventListenerToDateFilters(taskAndProjectcontroller);
 
+// render state form local storage
 storage.renderStateFromLocalStorage(sidebarFilterController, taskAndProjectcontroller);
