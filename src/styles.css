@@ -57,9 +57,13 @@ li {
     border-radius: 50%;
 }
 
-.clickable:hover:not(.selected-filter) {
+.clickable:hover:not(.selected-filter, .finished) {
     cursor: pointer;
     background-color: rgba(0, 0, 0, 0.05);
+}
+
+.clickable.finished {
+    cursor: pointer;
 }
 
 .span-icon {
