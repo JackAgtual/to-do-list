@@ -9,7 +9,6 @@ import TasksCompleteCounter from './tasksCompleteCounter'
 
 // TODO: figure out what to do if person adds a task when they are in filtered view
 // TODO: When filtering by projecet, adding task should default to filtered project
-// TODO: prevent user from inputting duplicate projects
 
 const storage = Storage();
 const tasksCompleteCounter = TasksCompleteCounter();

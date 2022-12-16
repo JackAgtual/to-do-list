@@ -19,7 +19,11 @@ export default function TaskAndProjectController(SidebarController) {
 
         const content = _getContent();
         content.innerHTML = '';
-        taskList.forEach(task => _addTaskToDom(task));
+        taskList.forEach(task => {
+            if (!task.idx) _addTaskToDom(task)
+            else _addTaskToDom(task, task.idx)
+        }
+        );
     }
 
     const inputNewTask = () => {
@@ -167,14 +171,13 @@ export default function TaskAndProjectController(SidebarController) {
                 // editing an existing task
 
                 const taskIdx = _getTaskIdx(parentElement)
+                task.idx = taskIdx;
 
                 // need to get finished state from taskMgr 
                 task.finished = window.TaskMgr.getTaskAtIdx(taskIdx).finished;
 
                 _addTaskToDom(task, taskIdx);
                 window.TaskMgr.editTaskAtIdx(taskIdx, task);
-
-                // Here is where you need to update event listener
             }
 
             parentElement.remove();
@@ -211,7 +214,6 @@ export default function TaskAndProjectController(SidebarController) {
         const toggleBtn = taskDomElement.firstElementChild;
         toggleBtn.addEventListener('click', () => {
             toggleBtn.classList.toggle('finished');
-            debugger
             window.TaskMgr.toggleTaskFinished(_getTaskIdx(taskDomElement));
         });
     }
